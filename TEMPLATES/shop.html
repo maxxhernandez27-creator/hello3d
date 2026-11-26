@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ t.shop }} | Hello 3D</title>
+    <meta name="description" content="{{ t.all_products_text }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="navbar">
+    <a href="{{ url_for('home') }}" class="brand">
+        <img src="{{ url_for('static', filename='images/hello3d-logo.png') }}" alt="Hello 3D">
+    </a>
+
+    <nav>
+        <a href="{{ url_for('home') }}">{{ t.home }}</a>
+        <a href="{{ url_for('shop') }}">{{ t.shop }}</a>
+        <a href="{{ url_for('home') }}#about">{{ t.about }}</a>
+        <a href="{{ url_for('home') }}#contact">{{ t.contact }}</a>
+    </nav>
+
+    <div class="language-selector">
+        <span>{{ t.language_label }}:</span>
+        <a href="{{ url_for('set_language', language='en', next=request.path) }}" class="{{ 'active-language' if lang == 'en' else '' }}">🇺🇸 EN</a>
+        <span>|</span>
+        <a href="{{ url_for('set_language', language='es', next=request.path) }}" class="{{ 'active-language' if lang == 'es' else '' }}">🇪🇸 ES</a>
+    </div>
+</header>
+
+<section class="products-section">
+    <div class="products-container">
+
+        <div class="section-heading">
+            <p class="subtitle">{{ t.all_products }}</p>
+            <h2>{{ t.all_products_title }}</h2>
+            <p>{{ t.all_products_text }}</p>
+        </div>
+
+        <div class="products-grid">
+            {% for item in products %}
+            <article class="product-card">
+
+                <a class="product-image-link" href="{{ url_for('product', product_id=item.id) }}">
+                    <img
+                        src="{{ url_for('static', filename=item.image) }}"
+                        alt="{{ item.name }}"
+                        loading="lazy">
+                </a>
+
+                <div class="product-info">
+                    <h3>{{ item.name }}</h3>
+                    <p>{{ item.description }}</p>
+
+                    <p class="product-price">
+                        {% if item.price > 0 %}
+                            ${{ "%.2f"|format(item.price) }} USD
+                        {% else %}
+                            {{ t.price_request }}
+                        {% endif %}
+                    </p>
+
+                    <a href="{{ url_for('product', product_id=item.id) }}" class="product-button">
+                        {{ t.view_product }}
+                    </a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+
+        <div class="shop-more-container">
+            <a href="{{ url_for('home') }}" class="back-home-button">
+                {{ 'Back to Home' if lang == 'en' else 'Volver al Inicio' }}
+            </a>
+        </div>
+
+    </div>
+</section>
+
+<footer>
+    <div class="footer-content">
+        <a href="{{ url_for('home') }}" class="footer-logo">
+            <img src="{{ url_for('static', filename='images/hello3d-logo.png') }}" alt="Hello 3D">
+        </a>
+
+        <p>{{ t.footer_text }}</p>
+
+        <div class="footer-links">
+            <a href="{{ url_for('home') }}">{{ t.home }}</a>
+            <a href="{{ url_for('shop') }}">{{ t.shop }}</a>
+            <a href="{{ url_for('home') }}#about">{{ t.about }}</a>
+            <a href="{{ url_for('home') }}#contact">{{ t.contact }}</a>
+        </div>
+
+        <p class="copyright">&copy; 2026 Hello 3D. {{ t.copyright }}</p>
+    </div>
+</footer>
+
+</body>
+</html>

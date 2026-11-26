@@ -1,0 +1,297 @@
+
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} | Hello 3D</title>
+    <meta name="description" content="{{ product.description }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script type="module"
+        src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js">
+    </script>
+
+    <style>
+        /* PRODUCT GALLERY */
+
+        .product-gallery {
+            position: relative;
+            width: 100%;
+            min-width: 0;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .product-gallery-slide {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: none !important;
+        }
+
+        .product-gallery-slide.is-active {
+            display: block !important;
+        }
+
+        .product-gallery-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            max-height: none !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+            object-fit: contain;
+        }
+
+        .product-gallery-slide model-viewer {
+            display: block;
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            background: transparent;
+            --poster-color: transparent;
+            cursor: grab;
+        }
+
+        .product-gallery-slide model-viewer:active {
+            cursor: grabbing;
+        }
+
+        /* GALLERY ARROWS */
+
+        .gallery-arrow {
+            all: unset;
+            box-sizing: border-box !important;
+            position: absolute !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+
+            width: 46px !important;
+            min-width: 46px !important;
+            max-width: 46px !important;
+            height: 46px !important;
+            min-height: 46px !important;
+
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+
+            border-radius: 50% !important;
+            border: 1px solid rgba(90, 40, 110, 0.15) !important;
+
+            background: rgba(255, 255, 255, 0.95) !important;
+            color: #48165f !important;
+
+            font-family: Arial, sans-serif !important;
+            font-size: 30px !important;
+            line-height: 1 !important;
+
+            cursor: pointer !important;
+            z-index: 20 !important;
+
+            box-shadow: 0 3px 12px rgba(40, 10, 50, 0.18) !important;
+
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .gallery-arrow:hover {
+            background: #f1ddff !important;
+            color: #7628a5 !important;
+        }
+
+        .gallery-prev {
+            left: 12px !important;
+        }
+
+        .gallery-next {
+            right: 12px !important;
+        }
+
+        /* GALLERY COUNTER */
+
+        .gallery-counter {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            padding: 6px 13px;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.55);
+            color: white;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="navbar">
+    <a href="{{ url_for('home') }}" class="brand">
+        <img src="{{ url_for('static', filename='images/hello3d-logo.png') }}" alt="Hello 3D">
+    </a>
+
+    <nav>
+        <a href="{{ url_for('home') }}">{{ t.home }}</a>
+        <a href="{{ url_for('shop') }}">{{ t.shop }}</a>
+        <a href="{{ url_for('home') }}#about">{{ t.about }}</a>
+        <a href="{{ url_for('home') }}#contact">{{ t.contact }}</a>
+    </nav>
+
+    <div class="language-selector">
+        <span>{{ t.language_label }}:</span>
+        <a href="{{ url_for('set_language', language='en', next=request.path) }}" class="{{ 'active-language' if lang == 'en' else '' }}">🇺🇸 EN</a>
+        <span>|</span>
+        <a href="{{ url_for('set_language', language='es', next=request.path) }}" class="{{ 'active-language' if lang == 'es' else '' }}">🇪🇸 ES</a>
+    </div>
+</header>
+
+<section class="products-section">
+    <div class="products-container">
+        <div class="contact-order-layout">
+
+            <div class="selected-product">
+
+                {% if product.model %}
+
+                <div class="product-gallery">
+
+                    <div class="product-gallery-slide is-active" id="product-model-slide">
+                        <model-viewer
+                            class="product-3d-viewer"
+                            src="{{ url_for('static', filename=product.model) }}"
+                            poster="{{ url_for('static', filename=product.image) }}"
+                            alt="{{ product.name }} 3D model"
+                            camera-controls
+                            auto-rotate
+                            rotation-per-second="20deg"
+                            interaction-prompt="auto"
+                            shadow-intensity="1"
+                            exposure="1">
+                        </model-viewer>
+                    </div>
+
+                    <div class="product-gallery-slide" id="product-image-slide">
+                        <img
+                            src="{{ url_for('static', filename=product.image) }}"
+                            alt="{{ product.name }}">
+                    </div>
+
+                    <button
+                        type="button"
+                        class="gallery-arrow gallery-prev"
+                        id="gallery-prev"
+                        aria-label="Previous view">
+                        &#8249;
+                    </button>
+
+                    <button
+                        type="button"
+                        class="gallery-arrow gallery-next"
+                        id="gallery-next"
+                        aria-label="Next view">
+                        &#8250;
+                    </button>
+
+                    <div class="gallery-counter" id="gallery-counter" aria-live="polite">
+                        1 / 2
+                    </div>
+
+                </div>
+
+                {% else %}
+
+                <img
+                    src="{{ url_for('static', filename=product.image) }}"
+                    alt="{{ product.name }}">
+
+                {% endif %}
+
+            </div>
+
+            <div class="product-info">
+                <p class="subtitle">{{ t.product_collection }}</p>
+                <h1>{{ product.name }}</h1>
+                <p>{{ product.description }}</p>
+
+                <p class="product-price">
+                    {% if product.price > 0 %}
+                        ${{ "%.2f"|format(product.price) }} USD
+                    {% else %}
+                        {{ t.price_request }}
+                    {% endif %}
+                </p>
+
+                <a href="{{ url_for('product_request', product_id=product.id) }}" class="main-button">
+                    {{ t.request_item }}
+                </a>
+
+                <p class="back-link">
+                    <a href="{{ url_for('shop') }}">{{ t.back_collection }}</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-content">
+        <a href="{{ url_for('home') }}" class="footer-logo">
+            <img src="{{ url_for('static', filename='images/hello3d-logo.png') }}" alt="Hello 3D">
+        </a>
+        <p>{{ t.footer_text }}</p>
+        <p class="copyright">&copy; 2026 Hello 3D. {{ t.copyright }}</p>
+    </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const modelSlide = document.getElementById('product-model-slide');
+    const imageSlide = document.getElementById('product-image-slide');
+
+    const previousButton = document.getElementById('gallery-prev');
+    const nextButton = document.getElementById('gallery-next');
+    const counter = document.getElementById('gallery-counter');
+
+    if (!modelSlide || !imageSlide ||
+        !previousButton || !nextButton || !counter) {
+        return;
+    }
+
+    const slides = [modelSlide, imageSlide];
+    let currentSlide = 0;
+
+    function showSlide(index) {
+
+        currentSlide = (index + slides.length) % slides.length;
+
+        slides.forEach(function (slide, i) {
+            slide.classList.toggle('is-active', i === currentSlide);
+        });
+
+        counter.textContent = (currentSlide + 1) + ' / ' + slides.length;
+    }
+
+    previousButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        showSlide(currentSlide - 1);
+    });
+
+    nextButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        showSlide(currentSlide + 1);
+    });
+
+    showSlide(0);
+});
+</script>
+
+</body>
+</html>
