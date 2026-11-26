@@ -8,7 +8,7 @@ from urllib.parse import quote
 app = Flask(__name__)
 app.secret_key = "replace-with-a-long-random-secret-key"
 
-WHATSAPP_NUMBER = "15551234567"
+WHATSAPP_NUMBER = "584123997293"
 
 
 # =====================================
