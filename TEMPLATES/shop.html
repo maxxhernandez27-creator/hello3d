@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ t.shop }} | Hello 3D</title>
+
+    <meta name="description" content="{{ t.shop_text }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<header class="navbar">
+
+    <a href="{{ url_for('home') }}" class="brand brand-text">
+        <span>Hello</span><span class="brand-3d">3D</span>
+    </a>
+
+    <nav>
+        <a href="{{ url_for('home') }}">{{ t.home }}</a>
+        <a href="{{ url_for('shop') }}">{{ t.shop }}</a>
+        <a href="{{ url_for('home') }}#about">{{ t.about }}</a>
+        <a href="{{ url_for('home') }}#contact">{{ t.contact }}</a>
+    </nav>
+
+    <div class="language-selector">
+
+        <span class="language-label">
+            {{ 'LANGUAGE:' if lang == 'en' else 'IDIOMA:' }}
+        </span>
+
+        <a href="{{ url_for('set_language', language='en', next=request.path) }}"
+           class="{{ 'active-language' if lang == 'en' else '' }}">
+            🇺🇸 EN
+        </a>
+
+        <span>|</span>
+
+        <a href="{{ url_for('set_language', language='es', next=request.path) }}"
+           class="{{ 'active-language' if lang == 'es' else '' }}">
+            🇪🇸 ES
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- =========================
+     SHOP COLLECTION
+========================= -->
+
+<section class="products-section">
+
+    <div class="products-container">
+
+        <!-- SECTION HEADING -->
+
+        <div class="section-heading">
+
+            <p class="subtitle">{{ t.all_products }}</p>
+
+            <h2>{{ t.shop_title }}</h2>
+
+            <p>{{ t.shop_text }}</p>
+
+        </div>
+
+
+        <!-- ALL PRODUCTS GRID -->
+
+        <div class="products-grid">
+
+            {% for item in products %}
+
+            <article class="product-card">
+
+                <!-- PRODUCT IMAGE -->
+
+                <a href="{{ url_for('product', product_id=item.id) }}">
+
+                    <img
+                        src="{{ url_for('static', filename=item.image) }}"
+                        alt="{{ item.name }}">
+
+                </a>
+
+
+                <!-- PRODUCT INFORMATION -->
+
+                <div class="product-info">
+
+                    <h3>{{ item.name }}</h3>
+
+                    <p>{{ item.description }}</p>
+
+                    <p class="product-price">
+
+                        {% if item.price > 0 %}
+
+                            ${{ "%.2f"|format(item.price) }} USD
+
+                        {% else %}
+
+                            {{ t.price_request }}
+
+                        {% endif %}
+
+                    </p>
+
+
+                    <!-- VIEW PRODUCT BUTTON -->
+
+                    <a href="{{ url_for('product', product_id=item.id) }}"
+                       class="product-button">
+
+                        {{ t.view_product }}
+
+                    </a>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- =========================
+             BACK TO HOME BUTTON
+        ========================= -->
+
+        <div class="shop-more-container">
+
+            <a href="{{ url_for('home') }}"
+               class="back-home-button">
+
+                {{ 'Back to Home' if lang == 'en' else 'Volver al Inicio' }}
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    <div class="footer-content">
+
+        <h3 class="footer-brand">
+            Hello <span>3D</span>
+        </h3>
+
+        <p>{{ t.footer_text }}</p>
+
+
+        <!-- FOOTER NAVIGATION -->
+
+        <div class="footer-links">
+
+            <a href="{{ url_for('home') }}">
+                {{ t.home }}
+            </a>
+
+            <a href="{{ url_for('shop') }}">
+                {{ t.shop }}
+            </a>
+
+            <a href="{{ url_for('home') }}#about">
+                {{ t.about }}
+            </a>
+
+            <a href="{{ url_for('home') }}#contact">
+                {{ t.contact }}
+            </a>
+
+        </div>
+
+
+        <!-- COPYRIGHT -->
+
+        <p class="copyright">
+
+            &copy; 2026 Hello 3D. {{ t.copyright }}
+
+        </p>
+
+    </div>
+
+</footer>
+
+</body>
+</html>
