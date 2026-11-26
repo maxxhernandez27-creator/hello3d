@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} | Hello 3D</title>
+    <meta name="description" content="{{ product.description }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="navbar">
+    <a href="{{ url_for('home') }}" class="brand brand-text">
+        <span>Hello</span><span class="brand-3d">3D</span>
+    </a>
+
+    <nav>
+        <a href="{{ url_for('home') }}">{{ t.home }}</a>
+        <a href="{{ url_for('shop') }}">{{ t.shop }}</a>
+        <a href="{{ url_for('home') }}#about">{{ t.about }}</a>
+        <a href="{{ url_for('home') }}#contact">{{ t.contact }}</a>
+    </nav>
+
+    <div class="language-selector">
+        <span class="language-label">{{ t.language_label }}:</span>
+        <a href="{{ url_for('set_language', language='en', next=request.path) }}"
+           class="{{ 'active-language' if lang == 'en' else '' }}">🇺🇸 EN</a>
+        <span>|</span>
+        <a href="{{ url_for('set_language', language='es', next=request.path) }}"
+           class="{{ 'active-language' if lang == 'es' else '' }}">🇪🇸 ES</a>
+    </div>
+</header>
+
+<section class="products-section">
+    <div class="products-container">
+
+        <div class="contact-order-layout">
+
+            <div class="selected-product">
+                <img src="{{ url_for('static', filename=product.image) }}"
+                     alt="{{ product.name }}">
+            </div>
+
+            <div class="product-info">
+                <p class="subtitle">{{ t.product_collection }}</p>
+                <h1>{{ product.name }}</h1>
+                <p>{{ product.description }}</p>
+
+                <p class="product-price">
+                    {% if product.price > 0 %}
+                        ${{ "%.2f"|format(product.price) }} USD
+                    {% else %}
+                        {{ t.price_request }}
+                    {% endif %}
+                </p>
+
+                <a href="{{ url_for('product_request', product_id=product.id) }}"
+                   class="main-button">
+                    {{ t.request_item }}
+                </a>
+
+                <p class="back-link">
+                    <a href="{{ url_for('shop') }}">{{ t.back_collection }}</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-content">
+        <h3 class="footer-brand">Hello <span>3D</span></h3>
+        <p>{{ t.footer_text }}</p>
+        <p class="copyright">
+            &copy; 2026 Hello 3D. {{ t.copyright }}
+        </p>
+    </div>
+</footer>
+
+</body>
+</html>
