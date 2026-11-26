@@ -1,1 +1,171 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello 3D | 3D Printed Creations</title>
+    <meta name="description" content="{{ t.hero_text }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
 
+<body>
+
+<header class="navbar">
+    <a href="{{ url_for('home') }}" class="brand brand-text">
+        <span>Hello</span><span class="brand-3d">3D</span>
+    </a>
+
+    <nav>
+        <a href="#home">{{ t.home }}</a>
+        <a href="{{ url_for('shop') }}">{{ t.shop }}</a>
+        <a href="#about">{{ t.about }}</a>
+        <a href="#contact">{{ t.contact }}</a>
+    </nav>
+
+    <div class="language-selector">
+        <span class="language-label">{{ t.language_label }}:</span>
+        <a href="{{ url_for('set_language', language='en', next=request.path) }}"
+           class="{{ 'active-language' if lang == 'en' else '' }}">🇺🇸 EN</a>
+        <span>|</span>
+        <a href="{{ url_for('set_language', language='es', next=request.path) }}"
+           class="{{ 'active-language' if lang == 'es' else '' }}">🇪🇸 ES</a>
+    </div>
+</header>
+
+<!-- HERO SECTION -->
+
+<section class="hero" id="home">
+    <div class="hero-content">
+        <p class="subtitle">{{ t.welcome }}</p>
+        <h1>{{ t.hero_title }}</h1>
+        <p>{{ t.hero_text }}</p>
+        <a href="#products" class="main-button">{{ t.explore }}</a>
+    </div>
+</section>
+
+<!-- FEATURED PRODUCTS SECTION -->
+
+<section class="products-section" id="products">
+    <div class="products-container">
+
+        <div class="section-heading">
+            <p class="subtitle">{{ t.collection }}</p>
+            <h2>{{ t.discover }}</h2>
+            <p>{{ t.collection_text }}</p>
+        </div>
+
+        <!-- PRODUCT GRID -->
+
+        <div class="products-grid">
+
+            {% for item in products %}
+            <article class="product-card">
+
+                <a href="{{ url_for('product', product_id=item.id) }}">
+                    <img src="{{ url_for('static', filename=item.image) }}"
+                         alt="{{ item.name }}">
+                </a>
+
+                <div class="product-info">
+                    <h3>{{ item.name }}</h3>
+                    <p>{{ item.description }}</p>
+
+                    <p class="product-price">
+                        {% if item.price > 0 %}
+                            ${{ "%.2f"|format(item.price) }} USD
+                        {% else %}
+                            {{ t.price_request }}
+                        {% endif %}
+                    </p>
+
+                    <a href="{{ url_for('product', product_id=item.id) }}"
+                       class="product-button">
+                        {{ t.view_product }}
+                    </a>
+                </div>
+
+            </article>
+            {% endfor %}
+
+        </div>
+
+        <!-- VIEW ALL PRODUCTS BUTTON -->
+
+        <div class="view-more-container">
+            <a href="{{ url_for('shop') }}" class="view-more-button">
+                {{ t.view_all }}
+            </a>
+        </div>
+
+    </div>
+</section>
+
+<!-- ABOUT SECTION -->
+
+<section class="about-section" id="about">
+    <div class="about-content">
+        <p class="subtitle">{{ t.story }}</p>
+        <h2>{{ t.story_title }}</h2>
+        <p>{{ t.story_text }}</p>
+    </div>
+</section>
+
+<!-- CONTACT SECTION -->
+
+<section class="contact-section" id="contact">
+    <div class="contact-content">
+        <p class="subtitle">{{ t.connect }}</p>
+        <h2>{{ t.idea }}</h2>
+        <p>{{ t.contact_text }}</p>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('contact') }}" method="POST">
+            <input type="text" name="name"
+                   placeholder="{{ t.your_name }}" required>
+
+            <input type="email" name="email"
+                   placeholder="{{ t.your_email }}" required>
+
+            <textarea name="message"
+                      placeholder="{{ t.message_placeholder }}"
+                      rows="5" required></textarea>
+
+            <button type="submit" class="main-button">
+                {{ t.send }}
+            </button>
+        </form>
+    </div>
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+    <div class="footer-content">
+
+        <h3 class="footer-brand">Hello <span>3D</span></h3>
+
+        <p>{{ t.footer_text }}</p>
+
+        <div class="footer-links">
+            <a href="#home">{{ t.home }}</a>
+            <a href="{{ url_for('shop') }}">{{ t.shop }}</a>
+            <a href="#about">{{ t.about }}</a>
+            <a href="#contact">{{ t.contact }}</a>
+        </div>
+
+        <p class="copyright">
+            &copy; 2026 Hello 3D. {{ t.copyright }}
+        </p>
+
+    </div>
+</footer>
+
+</body>
+</html>
