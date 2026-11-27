@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="{{ lang }}">
 <head>
@@ -11,11 +12,12 @@
 <body>
 
 <header class="navbar">
-    <a href="{{ url_for('home') }}" class="brand brand-text">
-        <span>Hello</span><span class="brand-3d">3D</span>
+    <a href="{{ url_for('home') }}" class="brand" aria-label="Hello 3D home">
+        <img src="{{ url_for('static', filename='images/hello3d-logo.png') }}"
+             alt="Hello 3D">
     </a>
 
-    <nav>
+    <nav aria-label="Main navigation">
         <a href="#home">{{ t.home }}</a>
         <a href="{{ url_for('shop') }}">{{ t.shop }}</a>
         <a href="#about">{{ t.about }}</a>
@@ -26,132 +28,135 @@
         <span class="language-label">{{ t.language_label }}:</span>
         <a href="{{ url_for('set_language', language='en', next=request.path) }}"
            class="{{ 'active-language' if lang == 'en' else '' }}">🇺🇸 EN</a>
-        <span>|</span>
+        <span class="language-divider">|</span>
         <a href="{{ url_for('set_language', language='es', next=request.path) }}"
            class="{{ 'active-language' if lang == 'es' else '' }}">🇪🇸 ES</a>
     </div>
 </header>
 
-<!-- HERO SECTION -->
+<main>
+    <section class="hero" id="home">
+        <div class="hero-content">
 
-<section class="hero" id="home">
-    <div class="hero-content">
-        <p class="subtitle">{{ t.welcome }}</p>
-        <h1>{{ t.hero_title }}</h1>
-        <p>{{ t.hero_text }}</p>
-        <a href="#products" class="main-button">{{ t.explore }}</a>
-    </div>
-</section>
+            <p class="hero-welcome">WELCOME TO</p>
 
-<!-- FEATURED PRODUCTS SECTION -->
+            <img
+                src="{{ url_for('static', filename='images/hello3d-logo.png') }}"
+                alt="Hello 3D"
+                class="hero-logo"
+            >
 
-<section class="products-section" id="products">
-    <div class="products-container">
+            <p class="hero-description">{{ t.hero_text }}</p>
 
-        <div class="section-heading">
-            <p class="subtitle">{{ t.collection }}</p>
-            <h2>{{ t.discover }}</h2>
-            <p>{{ t.collection_text }}</p>
-        </div>
-
-        <!-- PRODUCT GRID -->
-
-        <div class="products-grid">
-
-            {% for item in products %}
-            <article class="product-card">
-
-                <a href="{{ url_for('product', product_id=item.id) }}">
-                    <img src="{{ url_for('static', filename=item.image) }}"
-                         alt="{{ item.name }}">
-                </a>
-
-                <div class="product-info">
-                    <h3>{{ item.name }}</h3>
-                    <p>{{ item.description }}</p>
-
-                    <p class="product-price">
-                        {% if item.price > 0 %}
-                            ${{ "%.2f"|format(item.price) }} USD
-                        {% else %}
-                            {{ t.price_request }}
-                        {% endif %}
-                    </p>
-
-                    <a href="{{ url_for('product', product_id=item.id) }}"
-                       class="product-button">
-                        {{ t.view_product }}
-                    </a>
-                </div>
-
-            </article>
-            {% endfor %}
-
-        </div>
-
-        <!-- VIEW ALL PRODUCTS BUTTON -->
-
-        <div class="view-more-container">
-            <a href="{{ url_for('shop') }}" class="view-more-button">
-                {{ t.view_all }}
+            <a href="#products" class="main-button">
+                {{ t.explore }} <span aria-hidden="true">→</span>
             </a>
+
         </div>
 
-    </div>
-</section>
+        <span class="hero-star hero-star-one" aria-hidden="true">★</span>
+        <span class="hero-star hero-star-two" aria-hidden="true">★</span>
+        <span class="hero-star hero-star-three" aria-hidden="true">✦</span>
+        <span class="hero-star hero-star-four" aria-hidden="true">✦</span>
+        <span class="hero-orb hero-orb-one" aria-hidden="true"></span>
+        <span class="hero-orb hero-orb-two" aria-hidden="true"></span>
+        <span class="hero-orb hero-orb-three" aria-hidden="true"></span>
+    </section>
 
-<!-- ABOUT SECTION -->
+    <section class="products-section" id="products">
+        <div class="products-container">
+            <div class="section-heading">
+                <p class="subtitle section-pill">{{ t.collection }}</p>
+                <h2>{{ t.discover }}</h2>
+                <p>{{ t.collection_text }}</p>
+            </div>
 
-<section class="about-section" id="about">
-    <div class="about-content">
-        <p class="subtitle">{{ t.story }}</p>
-        <h2>{{ t.story_title }}</h2>
-        <p>{{ t.story_text }}</p>
-    </div>
-</section>
+            <div class="products-grid">
+                {% for item in products %}
+                <article class="product-card">
+                    <a class="product-image-link" href="{{ url_for('product', product_id=item.id) }}">
+                        <img src="{{ url_for('static', filename=item.image) }}"
+                             alt="{{ item.name }}" loading="lazy">
+                    </a>
 
-<!-- CONTACT SECTION -->
+                    <div class="product-info">
+                        <h3>{{ item.name }}</h3>
+                        <p class="product-description">{{ item.description }}</p>
 
-<section class="contact-section" id="contact">
-    <div class="contact-content">
-        <p class="subtitle">{{ t.connect }}</p>
-        <h2>{{ t.idea }}</h2>
-        <p>{{ t.contact_text }}</p>
+                        <p class="product-price">
+                            {% if item.price > 0 %}
+                                ${{ "%.2f"|format(item.price) }} USD
+                            {% else %}
+                                {{ t.price_request }}
+                            {% endif %}
+                        </p>
 
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="flash-message">{{ message }}</div>
+                        <a href="{{ url_for('product', product_id=item.id) }}"
+                           class="product-button">{{ t.view_product }} <span aria-hidden="true">→</span></a>
+                    </div>
+                </article>
                 {% endfor %}
-            {% endif %}
-        {% endwith %}
+            </div>
 
-        <form action="{{ url_for('contact') }}" method="POST">
-            <input type="text" name="name"
-                   placeholder="{{ t.your_name }}" required>
+            <div class="shop-more">
+                <a href="{{ url_for('shop') }}" class="main-button">{{ t.view_all }} <span aria-hidden="true">→</span></a>
+            </div>
+        </div>
+    </section>
 
-            <input type="email" name="email"
-                   placeholder="{{ t.your_email }}" required>
+    <section class="about-section" id="about">
+        <div class="about-art" aria-hidden="true">
+            <span class="about-star about-star-one">★</span>
+            <span class="about-star about-star-two">★</span>
+            <span class="about-star about-star-three">✦</span>
+        </div>
 
-            <textarea name="message"
-                      placeholder="{{ t.message_placeholder }}"
-                      rows="5" required></textarea>
+        <div class="about-content">
+            <p class="subtitle section-pill">{{ t.story }}</p>
+            <h2>{{ t.story_title }}</h2>
+            <p>{{ t.story_text }}</p>
+        </div>
+    </section>
 
-            <button type="submit" class="main-button">
-                {{ t.send }}
-            </button>
-        </form>
-    </div>
-</section>
+    <section class="contact-section" id="contact">
+        <div class="contact-layout">
+            <div class="contact-intro">
+                <p class="subtitle section-pill">{{ t.connect }}</p>
+                <h2>{{ t.idea }}</h2>
+                <p>{{ t.contact_text }}</p>
+            </div>
 
-<!-- FOOTER -->
+            <div class="contact-content">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="flash-message">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form action="{{ url_for('contact') }}" method="POST">
+                    <div class="contact-fields">
+                        <input type="text" name="name" placeholder="{{ t.your_name }}" aria-label="{{ t.your_name }}" required>
+                        <input type="email" name="email" placeholder="{{ t.your_email }}" aria-label="{{ t.your_email }}" required>
+                    </div>
+
+                    <textarea name="message" placeholder="{{ t.message_placeholder }}" aria-label="{{ t.message_placeholder }}" rows="4" required></textarea>
+
+                    <button type="submit" class="main-button">{{ t.send }} <span aria-hidden="true">→</span></button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
 
 <footer>
     <div class="footer-content">
+        <a href="{{ url_for('home') }}" class="footer-brand" aria-label="Hello 3D home">
+            <img src="{{ url_for('static', filename='images/hello3d-logo.png') }}" alt="Hello 3D">
+        </a>
 
-        <h3 class="footer-brand">Hello <span>3D</span></h3>
-
-        <p>{{ t.footer_text }}</p>
+        <p class="footer-tagline">{{ t.footer_text }}</p>
 
         <div class="footer-links">
             <a href="#home">{{ t.home }}</a>
@@ -160,10 +165,8 @@
             <a href="#contact">{{ t.contact }}</a>
         </div>
 
-        <p class="copyright">
-            &copy; 2026 Hello 3D. {{ t.copyright }}
-        </p>
-
+        <p class="copyright">&copy; 2026 Hello 3D. {{ t.copyright }}</p>
+        <span class="footer-sparkles" aria-hidden="true">✦ ★ ✦</span>
     </div>
 </footer>
 
