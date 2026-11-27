@@ -12,6 +12,19 @@ WHATSAPP_NUMBER = "584123997293"
 
 
 # =====================================
+# GOOGLE SEARCH CONSOLE VERIFICATION
+# =====================================
+
+@app.route("/google82676f7d96b1e054.html")
+def google_verification():
+    return (
+        "google-site-verification: google82676f7d96b1e054.html",
+        200,
+        {"Content-Type": "text/plain"}
+    )
+
+
+# =====================================
 # PRODUCT CATALOG
 # =====================================
 
